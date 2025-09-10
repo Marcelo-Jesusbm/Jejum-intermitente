@@ -10,8 +10,15 @@ import Foundation
 final class AppContainer {
     // Infra
     let clock: Clock
+    let coreData: CoreDataStack
     let sessionRepo: FastingSessionRepository
     let planRepo: PlanRepository
+
+    // Timer factory
+    let tickerFactory: () -> Ticker
+
+    // Settings
+    let settings: AppSettings
 
     // Use cases
     lazy var getActiveSession = GetActiveSessionUseCase(sessionRepo: sessionRepo)
@@ -22,17 +29,34 @@ final class AppContainer {
     lazy var getDefaultPlan = GetDefaultPlanUseCase(planRepo: planRepo)
     lazy var setDefaultPlan = SetDefaultPlanUseCase(planRepo: planRepo)
 
-    init(clock: Clock, sessionRepo: FastingSessionRepository, planRepo: PlanRepository) {
+    init(
+        clock: Clock,
+        coreData: CoreDataStack,
+        sessionRepo: FastingSessionRepository,
+        planRepo: PlanRepository,
+        tickerFactory: @escaping () -> Ticker,
+        settings: AppSettings
+    ) {
         self.clock = clock
+        self.coreData = coreData
         self.sessionRepo = sessionRepo
         self.planRepo = planRepo
+        self.tickerFactory = tickerFactory
+        self.settings = settings
     }
 
-    static func buildDefault() -> AppContainer {
-        AppContainer(
+    static func buildDefault(inMemory: Bool = false) -> AppContainer {
+        let coreData = CoreDataStack(inMemory: inMemory)
+        let sessionRepo = CoreDataFastingSessionRepository(coreData: coreData)
+        let planRepo = CoreDataPlanRepository(coreData: coreData)
+
+        return AppContainer(
             clock: SystemClock(),
-            sessionRepo: InMemoryFastingSessionRepository(),
-            planRepo: InMemoryPlanRepository()
+            coreData: coreData,
+            sessionRepo: sessionRepo,
+            planRepo: planRepo,
+            tickerFactory: { GCDTicker(queue: .main) },
+            settings: AppSettings()
         )
     }
 
@@ -43,19 +67,24 @@ final class AppContainer {
             startFast: startFast,
             stopFast: stopFast,
             getDefaultPlan: getDefaultPlan,
-            clock: clock
+            clock: clock,
+            tickerFactory: tickerFactory
         )
     }
 
     func makeHistoryViewModel() -> HistoryViewModel {
-        HistoryViewModel()
+        HistoryViewModel(getHistory: getHistory)
     }
 
     func makePlansViewModel() -> PlansViewModel {
-        PlansViewModel()
+        PlansViewModel(
+            getAvailablePlans: getAvailablePlans,
+            getDefaultPlan: getDefaultPlan,
+            setDefaultPlan: setDefaultPlan
+        )
     }
 
     func makeSettingsViewModel() -> SettingsViewModel {
-        SettingsViewModel()
+        SettingsViewModel(settings: settings)
     }
 }

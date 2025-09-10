@@ -8,6 +8,12 @@
 import UIKit
 
 final class HistoryCoordinator: Coordinator {
+    private let container: AppContainer
+
+    init(container: AppContainer) {
+        self.container = container
+    }
+
     let navigationController: UINavigationController = {
         let nav = UINavigationController()
         nav.navigationBar.prefersLargeTitles = true
@@ -20,7 +26,7 @@ final class HistoryCoordinator: Coordinator {
     }()
 
     func start() {
-        let vm = HistoryViewModel()
+        let vm = container.makeHistoryViewModel()
         let vc = HistoryViewController(viewModel: vm)
         vc.title = "Histórico"
         navigationController.setViewControllers([vc], animated: false)

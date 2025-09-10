@@ -8,15 +8,7 @@
 import UIKit
 
 final class SettingsView: UIView, ViewCode {
-    private let label: UILabel = {
-        let l = UILabel()
-        l.text = "Ajustes do app."
-        l.font = Typography.body()
-        l.textAlignment = .center
-        l.textColor = Colors.textSecondary
-        l.numberOfLines = 0
-        return l
-    }()
+    let tableView = UITableView(frame: .zero, style: .insetGrouped)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,20 +16,25 @@ final class SettingsView: UIView, ViewCode {
         backgroundColor = Colors.background
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    func setupHierarchy() {
+        addSubview(tableView)
     }
 
-    func setupHierarchy() { addSubview(label) }
-
     func setupConstraints() {
-        label.translatesAutoresizingMaskIntoConstraints = false
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24)
+            tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 
-    func setupViews() {}
+    func setupViews() {
+        tableView.backgroundColor = Colors.background
+        tableView.register(SettingsSwitchCell.self, forCellReuseIdentifier: SettingsSwitchCell.reuseId)
+        tableView.rowHeight = 56
+    }
 }

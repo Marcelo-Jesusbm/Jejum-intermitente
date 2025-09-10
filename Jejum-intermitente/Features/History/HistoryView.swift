@@ -8,15 +8,8 @@
 import UIKit
 
 final class HistoryView: UIView, ViewCode {
-    private let label: UILabel = {
-        let l = UILabel()
-        l.text = "Seu histórico aparecerá aqui."
-        l.font = Typography.body()
-        l.textAlignment = .center
-        l.textColor = Colors.textSecondary
-        l.numberOfLines = 0
-        return l
-    }()
+    let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    let refresh = UIRefreshControl()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,22 +17,26 @@ final class HistoryView: UIView, ViewCode {
         backgroundColor = Colors.background
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     func setupHierarchy() {
-        addSubview(label)
+        addSubview(tableView)
+        tableView.addSubview(refresh)
     }
 
     func setupConstraints() {
-        label.translatesAutoresizingMaskIntoConstraints = false
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24)
+            tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 
-    func setupViews() {}
+    func setupViews() {
+        tableView.backgroundColor = Colors.background
+        tableView.register(HistoryCell.self, forCellReuseIdentifier: HistoryCell.reuseId)
+        tableView.rowHeight = 64
+    }
 }

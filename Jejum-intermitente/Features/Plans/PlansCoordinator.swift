@@ -8,6 +8,12 @@
 import UIKit
 
 final class PlansCoordinator: Coordinator {
+    private let container: AppContainer
+
+    init(container: AppContainer) {
+        self.container = container
+    }
+
     let navigationController: UINavigationController = {
         let nav = UINavigationController()
         nav.navigationBar.prefersLargeTitles = true
@@ -20,7 +26,7 @@ final class PlansCoordinator: Coordinator {
     }()
 
     func start() {
-        let vm = PlansViewModel()
+        let vm = container.makePlansViewModel()
         let vc = PlansViewController(viewModel: vm)
         vc.title = "Planos"
         navigationController.setViewControllers([vc], animated: false)

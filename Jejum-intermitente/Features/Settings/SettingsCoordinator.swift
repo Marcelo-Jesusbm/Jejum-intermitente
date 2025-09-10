@@ -8,6 +8,12 @@
 import UIKit
 
 final class SettingsCoordinator: Coordinator {
+    private let container: AppContainer
+
+    init(container: AppContainer) {
+        self.container = container
+    }
+
     let navigationController: UINavigationController = {
         let nav = UINavigationController()
         nav.navigationBar.prefersLargeTitles = true
@@ -20,7 +26,7 @@ final class SettingsCoordinator: Coordinator {
     }()
 
     func start() {
-        let vm = SettingsViewModel()
+        let vm = container.makeSettingsViewModel()
         let vc = SettingsViewController(viewModel: vm)
         vc.title = "Ajustes"
         navigationController.setViewControllers([vc], animated: false)

@@ -31,9 +31,9 @@ final class TabBarCoordinator: Coordinator {
         }
 
         self.todayCoordinator = TodayCoordinator(container: container)
-        self.historyCoordinator = HistoryCoordinator()
-        self.plansCoordinator = PlansCoordinator()
-        self.settingsCoordinator = SettingsCoordinator()
+        self.historyCoordinator = HistoryCoordinator(container: container)
+        self.plansCoordinator = PlansCoordinator(container: container)
+        self.settingsCoordinator = SettingsCoordinator(container: container)
     }
 
     func start() {

@@ -23,20 +23,21 @@ final class TodayViewController: BaseViewController<TodayView> {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .always
         contentView.actionButton.addTarget(self, action: #selector(didTapAction), for: .touchUpInside)
-        contentView.update(isFasting: false)
         viewModel.onAppear()
     }
 
     private func setupBindings() {
+        viewModel.onStateChange = { [weak self] state in
+            self?.contentView.update(state: state)
+        }
+
         viewModel.onStartFast = { [weak self] in
-            self?.contentView.update(isFasting: true)
             let alert = UIAlertController(title: "Jejum iniciado", message: "Boa sorte! 🍀", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             self?.present(alert, animated: true)
         }
 
         viewModel.onStopFast = { [weak self] in
-            self?.contentView.update(isFasting: false)
             let alert = UIAlertController(title: "Jejum finalizado", message: "Ótimo trabalho! 💪", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             self?.present(alert, animated: true)
@@ -46,10 +47,6 @@ final class TodayViewController: BaseViewController<TodayView> {
             let alert = UIAlertController(title: "Ops", message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             self?.present(alert, animated: true)
-        }
-
-        viewModel.onStateSync = { [weak self] isFasting in
-            self?.contentView.update(isFasting: isFasting)
         }
     }
 
