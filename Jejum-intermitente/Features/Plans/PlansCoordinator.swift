@@ -18,7 +18,7 @@ final class PlansCoordinator: Coordinator {
         let nav = UINavigationController()
         nav.navigationBar.prefersLargeTitles = true
         nav.tabBarItem = UITabBarItem(
-            title: "Planos",
+            title: Strings.Tab.plans,
             image: UIImage(systemName: "list.bullet.rectangle"),
             selectedImage: UIImage(systemName: "list.bullet.rectangle.fill")
         )
@@ -28,7 +28,7 @@ final class PlansCoordinator: Coordinator {
     func start() {
         let vm = container.makePlansViewModel()
         let vc = PlansViewController(viewModel: vm)
-        vc.title = "Planos"
+        vc.title = Strings.Plans.title
         navigationController.setViewControllers([vc], animated: false)
     }
 }

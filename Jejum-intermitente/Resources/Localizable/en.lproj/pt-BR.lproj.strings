@@ -5,3 +5,77 @@
   Created by Marcelo Jesus on 11/09/25.
   
 */
+"tab.today" = "Hoje";
+"tab.history" = "Histórico";
+"tab.plans" = "Planos";
+"tab.settings" = "Ajustes";
+
+"today.title" = "Rastreador de Jejum";
+"today.plan.default" = "Plano padrão: %@";
+"today.plan.current" = "Plano: %@";
+"today.start" = "Iniciar Jejum";
+"today.stop" = "Parar Jejum";
+"today.started" = "Jejum iniciado";
+"today.started.msg" = "Boa sorte! 🍀";
+"today.stopped" = "Jejum finalizado";
+"today.stopped.msg" = "Ótimo trabalho! 💪";
+"today.start.time" = "Início: %@";
+"today.elapsed" = "Decorridos: %@";
+"today.remaining" = "Restantes: %@";
+
+"history.title" = "Histórico";
+"history.header" = "Insights";
+"history.last14" = "Últimos 14 dias";
+"history.refresh.error" = "Erro";
+
+"history.filters.title" = "Filtros";
+"history.filters.all" = "Todos";
+"history.filters.active" = "Ativos";
+"history.filters.finished" = "Concluídos";
+"history.filters.clearPlan" = "Limpar plano";
+"history.filters.cancel" = "Cancelar";
+"history.export" = "Exportar";
+
+"plans.title" = "Planos";
+"plans.updated" = "Plano padrão atualizado";
+
+"settings.title" = "Ajustes";
+"settings.notifications" = "Notificações";
+"settings.clock24h" = "Relógio 24h";
+"settings.theme" = "Tema";
+"settings.theme.system" = "Sistema";
+"settings.theme.light" = "Claro";
+"settings.theme.dark" = "Escuro";
+"settings.toast.on" = "Ativado";
+"settings.toast.off" = "Desativado";
+"settings.notifications.on" = "Notificações ativadas";
+"settings.notifications.off" = "Notificações desativadas";
+"settings.notifications.denied" = "Permissão negada nas Configurações";
+"settings.clock.on" = "Relógio 24h ativado";
+"settings.clock.off" = "Relógio 24h desativado";
+
+"session.detail.title" = "Sessão";
+"session.detail.plan" = "Plano: %@";
+"session.detail.start" = "Início: %@";
+"session.detail.end.running" = "Fim: em andamento";
+"session.detail.end" = "Fim: %@";
+"session.detail.duration" = "Duração: %@";
+"session.detail.adjust.end" = "Ajustar fim:";
+"session.detail.save" = "Salvar alterações";
+"session.detail.stop.now" = "Parar agora";
+"session.detail.delete" = "Excluir sessão";
+"session.detail.saved" = "Salvo";
+"session.detail.saved.msg" = "Fim ajustado.";
+"session.detail.delete.ask" = "Excluir sessão?";
+"session.detail.delete.warn" = "Esta ação não pode ser desfeita.";
+"common.cancel" = "Cancelar";
+"common.ok" = "OK";
+"common.error" = "Erro";
+
+"notifications.end.title" = "Jejum concluído";
+"notifications.end.body" = "%@ Seu jejum %@ atingiu a meta!";
+"notifications.action.stop" = "Parar Jejum";
+"settings.export.json" = "Exportar JSON";
+"settings.import.json" = "Importar JSON";
+"settings.import.result" = "Importadas: %d • Atualizadas: %d • Ignoradas: %d";
+"settings.import.failed" = "Falha ao importar";

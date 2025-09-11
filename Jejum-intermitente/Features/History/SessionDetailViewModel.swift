@@ -8,7 +8,6 @@
 import Foundation
 
 final class SessionDetailViewModel {
-    // Outputs
     struct UIState {
         let title: String
         let planLine: String
@@ -16,6 +15,8 @@ final class SessionDetailViewModel {
         let endLine: String
         let durationLine: String
         let isActive: Bool
+        let startDate: Date
+        let endDate: Date?
     }
 
     var onState: ((UIState) -> Void)?
@@ -23,15 +24,14 @@ final class SessionDetailViewModel {
     var onDismiss: (() -> Void)?
     var onDidChange: (() -> Void)?
 
-    // Deps
     private let sessionId: UUID
     private let getSessionById: GetSessionByIdUseCase
     private let updateEndDate: UpdateSessionEndDateUseCase
     private let deleteSession: DeleteSessionUseCase
     private let stopFast: StopFastUseCase
     private let notifications: NotificationScheduling
+    private let settings: AppSettings = AppEnvironment.shared.container.settings
 
-    // State
     private var session: FastingSession?
 
     init(
@@ -66,16 +66,19 @@ final class SessionDetailViewModel {
 
     private func emitState() {
         guard let s = session else { return }
-        let start = DateFormatterHelper.dateTimeShort(from: s.startDate)
-        let end = s.endDate != nil ? DateFormatterHelper.dateTimeShort(from: s.endDate!) : "—"
+        let use24h = settings.use24hClock
+        let startText = DateFormatterHelper.dateTimeShort(from: s.startDate, use24h: use24h)
+        let endText = s.endDate != nil ? DateFormatterHelper.dateTimeShort(from: s.endDate!, use24h: use24h) : "—"
         let duration = s.elapsed(at: s.endDate ?? Date())
         let ui = UIState(
             title: s.planName,
-            planLine: "\(s.planEmoji) Plano: \(s.planName)",
-            startLine: "Início: \(start)",
-            endLine: s.isActive ? "Fim: em andamento" : "Fim: \(end)",
-            durationLine: "Duração: \(TimeFormatter.hms(duration))",
-            isActive: s.isActive
+            planLine: Strings.SessionDetail.plan(s.planName),
+            startLine: Strings.SessionDetail.start(startText),
+            endLine: s.isActive ? Strings.SessionDetail.endRunning : Strings.SessionDetail.end(endText),
+            durationLine: Strings.SessionDetail.duration(TimeFormatter.hms(duration)),
+            isActive: s.isActive,
+            startDate: s.startDate,
+            endDate: s.endDate
         )
         onState?(ui)
     }

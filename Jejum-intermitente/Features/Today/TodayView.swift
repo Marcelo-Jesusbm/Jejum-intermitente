@@ -8,10 +8,9 @@
 import UIKit
 
 final class TodayView: UIView, ViewCode {
-    // Cabeçalho
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Rastreador de Jejum"
+        label.text = Strings.Today.title
         label.font = Typography.titleBold()
         label.textColor = Colors.textPrimary
         label.textAlignment = .center
@@ -37,7 +36,6 @@ final class TodayView: UIView, ViewCode {
         return l
     }()
 
-    // Progresso
     private let progressView: UIProgressView = {
         let p = UIProgressView(progressViewStyle: .default)
         p.progressTintColor = Colors.accent
@@ -64,7 +62,7 @@ final class TodayView: UIView, ViewCode {
 
     let actionButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Iniciar Jejum", for: .normal)
+        button.setTitle(Strings.Today.startBtn, for: .normal)
         button.titleLabel?.font = Typography.body(18)
         button.backgroundColor = Colors.primary
         button.tintColor = .white
@@ -82,9 +80,7 @@ final class TodayView: UIView, ViewCode {
         backgroundColor = Colors.background
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     func setupHierarchy() {
         contentStack.axis = .vertical
@@ -125,7 +121,7 @@ final class TodayView: UIView, ViewCode {
 
     func setupViews() {
         isAccessibilityElement = false
-        [titleLabel, planLabel, startLabel, elapsedLabel, remainingLabel, actionButton].forEach {
+        [planLabel, startLabel, elapsedLabel, remainingLabel, actionButton].forEach {
             $0.isAccessibilityElement = true
         }
     }

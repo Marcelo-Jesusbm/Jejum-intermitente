@@ -13,10 +13,15 @@ final class AppSettings {
     private enum Keys {
         static let notificationsEnabled = "settings.notificationsEnabled"
         static let use24hClock = "settings.use24hClock"
+        static let themeMode = "settings.themeMode"
     }
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
+        // Seed padrão
+        if defaults.string(forKey: Keys.themeMode) == nil {
+            defaults.set(ThemeMode.system.rawValue, forKey: Keys.themeMode)
+        }
     }
 
     var notificationsEnabled: Bool {
@@ -27,5 +32,10 @@ final class AppSettings {
     var use24hClock: Bool {
         get { defaults.bool(forKey: Keys.use24hClock) }
         set { defaults.set(newValue, forKey: Keys.use24hClock) }
+    }
+
+    var themeMode: ThemeMode {
+        get { ThemeMode(rawValue: defaults.string(forKey: Keys.themeMode) ?? ThemeMode.system.rawValue) ?? .system }
+        set { defaults.set(newValue.rawValue, forKey: Keys.themeMode) }
     }
 }

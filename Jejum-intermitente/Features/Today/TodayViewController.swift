@@ -15,9 +15,7 @@ final class TodayViewController: BaseViewController<TodayView> {
         setupBindings()
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,20 +30,20 @@ final class TodayViewController: BaseViewController<TodayView> {
         }
 
         viewModel.onStartFast = { [weak self] in
-            let alert = UIAlertController(title: "Jejum iniciado", message: "Boa sorte! 🍀", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            let alert = UIAlertController(title: Strings.Today.started, message: Strings.Today.startedMsg, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: Strings.Common.ok, style: .default))
             self?.present(alert, animated: true)
         }
 
         viewModel.onStopFast = { [weak self] in
-            let alert = UIAlertController(title: "Jejum finalizado", message: "Ótimo trabalho! 💪", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            let alert = UIAlertController(title: Strings.Today.stopped, message: Strings.Today.stoppedMsg, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: Strings.Common.ok, style: .default))
             self?.present(alert, animated: true)
         }
 
         viewModel.onError = { [weak self] message in
-            let alert = UIAlertController(title: "Ops", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            let alert = UIAlertController(title: Strings.Common.error, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: Strings.Common.ok, style: .default))
             self?.present(alert, animated: true)
         }
     }

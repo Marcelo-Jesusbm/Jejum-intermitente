@@ -18,7 +18,7 @@ final class SettingsCoordinator: Coordinator {
         let nav = UINavigationController()
         nav.navigationBar.prefersLargeTitles = true
         nav.tabBarItem = UITabBarItem(
-            title: "Ajustes",
+            title: Strings.Tab.settings,
             image: UIImage(systemName: "gearshape"),
             selectedImage: UIImage(systemName: "gearshape.fill")
         )
@@ -28,7 +28,7 @@ final class SettingsCoordinator: Coordinator {
     func start() {
         let vm = container.makeSettingsViewModel()
         let vc = SettingsViewController(viewModel: vm)
-        vc.title = "Ajustes"
+        vc.title = Strings.Settings.title
         navigationController.setViewControllers([vc], animated: false)
     }
 }

@@ -35,6 +35,8 @@ final class SettingsView: UIView, ViewCode {
     func setupViews() {
         tableView.backgroundColor = Colors.background
         tableView.register(SettingsSwitchCell.self, forCellReuseIdentifier: SettingsSwitchCell.reuseId)
+        tableView.register(SettingsOptionCell.self, forCellReuseIdentifier: SettingsOptionCell.reuseId)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ActionCell")
         tableView.rowHeight = 56
     }
 }

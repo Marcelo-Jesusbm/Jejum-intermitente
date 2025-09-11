@@ -8,19 +8,27 @@
 import Foundation
 
 enum DateFormatterHelper {
-    static func timeShort(from date: Date) -> String {
+    static func timeShort(from date: Date, use24h: Bool) -> String {
         let df = DateFormatter()
         df.locale = .current
-        df.timeStyle = .short
-        df.dateStyle = .none
+        if use24h {
+            df.setLocalizedDateFormatFromTemplate("HHmm")
+        } else {
+            df.timeStyle = .short
+            df.dateStyle = .none
+        }
         return df.string(from: date)
     }
 
-    static func dateTimeShort(from date: Date) -> String {
+    static func dateTimeShort(from date: Date, use24h: Bool) -> String {
         let df = DateFormatter()
         df.locale = .current
-        df.timeStyle = .short
-        df.dateStyle = .short
+        if use24h {
+            df.setLocalizedDateFormatFromTemplate("yMMMd HHmm")
+        } else {
+            df.dateStyle = .short
+            df.timeStyle = .short
+        }
         return df.string(from: date)
     }
 }

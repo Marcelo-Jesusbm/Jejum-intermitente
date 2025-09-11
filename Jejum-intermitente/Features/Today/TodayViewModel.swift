@@ -11,7 +11,6 @@ import Foundation
 import UIKit
 
 final class TodayViewModel {
-    // Saídas
     struct UIState {
         let isFasting: Bool
         let planLine: String
@@ -27,19 +26,15 @@ final class TodayViewModel {
     var onStopFast: (() -> Void)?
     var onError: ((String) -> Void)?
 
-    // Casos de uso
     private let getActiveSession: GetActiveSessionUseCase
     private let startFast: StartFastUseCase
     private let stopFast: StopFastUseCase
     private let getDefaultPlan: GetDefaultPlanUseCase
     private let clock: Clock
     private let tickerFactory: () -> Ticker
-
-    // Ajustes e notificações
     private let settings: AppSettings
     private let notifications: NotificationScheduling
 
-    // Estado atual
     private(set) var activeSession: FastingSession?
     private var ticker: Ticker?
     private var lifecycleObservers: [NSObjectProtocol] = []
@@ -87,16 +82,12 @@ final class TodayViewModel {
     }
 
     func toggleFast() {
-        if isFasting {
-            stop()
-        } else {
-            start()
-        }
+        isFasting ? stop() : start()
     }
 
     private func start() {
         do {
-            _ = getDefaultPlan.execute() // futuro: permitir seleção
+            _ = getDefaultPlan.execute()
             let session = try startFast.execute(.init())
             self.activeSession = session
             if settings.notificationsEnabled {
@@ -132,30 +123,31 @@ final class TodayViewModel {
 
     private func emitState() {
         let now = clock.now()
+        let use24h = settings.use24hClock
         if let s = activeSession {
             let elapsed = s.elapsed(at: now)
             let remaining = s.remaining(at: now)
             let progress = s.progress(at: now)
             let state = UIState(
                 isFasting: true,
-                planLine: "\(s.planEmoji) Plano: \(s.planName)",
-                startLine: "Início: \(DateFormatterHelper.timeShort(from: s.startDate))",
-                elapsedText: "Decorridos: \(TimeFormatter.hms(elapsed))",
-                remainingText: "Restantes: \(TimeFormatter.hms(remaining))",
+                planLine: Strings.Today.planCurrent(s.planName),
+                startLine: Strings.Today.startTime(DateFormatterHelper.timeShort(from: s.startDate, use24h: use24h)),
+                elapsedText: Strings.Today.elapsed(TimeFormatter.hms(elapsed)),
+                remainingText: Strings.Today.remaining(TimeFormatter.hms(remaining)),
                 progress: progress,
-                buttonTitle: "Parar Jejum"
+                buttonTitle: Strings.Today.stopBtn
             )
             onStateChange?(state)
         } else {
             let defaultPlan = getDefaultPlan.execute()
             let state = UIState(
                 isFasting: false,
-                planLine: "\(defaultPlan.emoji) Plano padrão: \(defaultPlan.name)",
-                startLine: "Início: —",
-                elapsedText: "Decorridos: 00:00:00",
-                remainingText: "Restantes: \(TimeFormatter.hms(defaultPlan.fastingDuration))",
+                planLine: Strings.Today.planDefault(defaultPlan.name),
+                startLine: Strings.Today.startTime("—"),
+                elapsedText: Strings.Today.elapsed(TimeFormatter.hms(0)),
+                remainingText: Strings.Today.remaining(TimeFormatter.hms(defaultPlan.fastingDuration)),
                 progress: 0,
-                buttonTitle: "Iniciar Jejum"
+                buttonTitle: Strings.Today.startBtn
             )
             onStateChange?(state)
         }

@@ -18,7 +18,7 @@ final class TodayCoordinator: Coordinator {
         let nav = UINavigationController()
         nav.navigationBar.prefersLargeTitles = true
         nav.tabBarItem = UITabBarItem(
-            title: "Hoje",
+            title: Strings.Tab.today,
             image: UIImage(systemName: "clock"),
             selectedImage: UIImage(systemName: "clock.fill")
         )
@@ -28,7 +28,7 @@ final class TodayCoordinator: Coordinator {
     func start() {
         let vm = container.makeTodayViewModel()
         let vc = TodayViewController(viewModel: vm)
-        vc.title = "Hoje"
+        vc.title = Strings.Tab.today
         navigationController.setViewControllers([vc], animated: false)
     }
 }

@@ -17,9 +17,7 @@ final class HistoryViewModel {
         let planId: String
     }
 
-    enum StatusFilter {
-        case all, active, finished
-    }
+    enum StatusFilter { case all, active, finished }
 
     var onStateChange: (([Row]) -> Void)?
     var onError: ((String) -> Void)?
@@ -29,8 +27,8 @@ final class HistoryViewModel {
     private let getHistory: GetHistoryUseCase
     private let computeMetrics: ComputeMetricsUseCase
     private let exportCSV: ExportHistoryCSVUseCase
+    private let settings: AppSettings = AppEnvironment.shared.container.settings
 
-    // Estado
     private var allRows: [Row] = []
     private(set) var appliedStatus: StatusFilter = .all
     private(set) var appliedPlanId: String? = nil
@@ -41,19 +39,18 @@ final class HistoryViewModel {
         self.exportCSV = exportCSV
     }
 
-    func onAppear() {
-        reload()
-    }
+    func onAppear() { reload() }
 
     func reload() {
         do {
+            let use24h = settings.use24hClock
             let sessions = try getHistory.execute(limit: nil, offset: 0)
             allRows = sessions.map { s in
-                let start = DateFormatterHelper.timeShort(from: s.startDate)
+                let start = DateFormatterHelper.timeShort(from: s.startDate, use24h: use24h)
                 let end: String
                 let elapsed: TimeInterval
                 if let endDate = s.endDate {
-                    end = DateFormatterHelper.timeShort(from: endDate)
+                    end = DateFormatterHelper.timeShort(from: endDate, use24h: use24h)
                     elapsed = s.elapsed(at: endDate)
                 } else {
                     end = "Em andamento"
@@ -107,9 +104,7 @@ final class HistoryViewModel {
     func buildCSV(completion: @escaping (String) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             let result = (try? self.exportCSV.execute()) ?? ""
-            DispatchQueue.main.async {
-                completion(result)
-            }
+            DispatchQueue.main.async { completion(result) }
         }
     }
 }

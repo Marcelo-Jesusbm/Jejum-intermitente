@@ -19,7 +19,7 @@ final class HistoryCoordinator: Coordinator {
         let nav = UINavigationController()
         nav.navigationBar.prefersLargeTitles = true
         nav.tabBarItem = UITabBarItem(
-            title: "Histórico",
+            title: Strings.Tab.history,
             image: UIImage(systemName: "chart.bar.doc.horizontal"),
             selectedImage: UIImage(systemName: "chart.bar.doc.horizontal.fill")
         )
@@ -34,17 +34,14 @@ final class HistoryCoordinator: Coordinator {
             self?.showDetail(sessionId: id)
         }
         let vc = HistoryViewController(viewModel: vm)
-        vc.title = "Histórico"
+        vc.title = Strings.History.title
         navigationController.setViewControllers([vc], animated: false)
         self.historyVM = vm
     }
 
     private func showDetail(sessionId: UUID) {
         let vm = container.makeSessionDetailViewModel(sessionId: sessionId)
-        // Ao salvar/excluir, recarrega histórico
-        vm.onDidChange = { [weak self] in
-            self?.historyVM?.reload()
-        }
+        vm.onDidChange = { [weak self] in self?.historyVM?.reload() }
         let vc = SessionDetailViewController(viewModel: vm)
         navigationController.pushViewController(vc, animated: true)
     }

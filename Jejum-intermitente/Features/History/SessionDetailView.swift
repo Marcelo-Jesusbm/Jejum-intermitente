@@ -22,7 +22,7 @@ final class SessionDetailView: UIView, ViewCode {
 
     let saveButton: UIButton = {
         let b = UIButton(type: .system)
-        b.setTitle("Salvar alterações", for: .normal)
+        b.setTitle(Strings.SessionDetail.save, for: .normal)
         b.titleLabel?.font = Typography.body(18)
         b.backgroundColor = Colors.primary
         b.tintColor = .white
@@ -33,7 +33,7 @@ final class SessionDetailView: UIView, ViewCode {
 
     let stopButton: UIButton = {
         let b = UIButton(type: .system)
-        b.setTitle("Parar agora", for: .normal)
+        b.setTitle(Strings.SessionDetail.stopNow, for: .normal)
         b.titleLabel?.font = Typography.body(18)
         b.backgroundColor = Colors.danger
         b.tintColor = .white
@@ -44,7 +44,7 @@ final class SessionDetailView: UIView, ViewCode {
 
     let deleteButton: UIButton = {
         let b = UIButton(type: .system)
-        b.setTitle("Excluir sessão", for: .normal)
+        b.setTitle(Strings.SessionDetail.delete, for: .normal)
         b.titleLabel?.font = Typography.body(16)
         b.setTitleColor(Colors.danger, for: .normal)
         return b
@@ -71,7 +71,7 @@ final class SessionDetailView: UIView, ViewCode {
         }
 
         let endEditRow = UIStackView(arrangedSubviews: [UILabel(), endDatePicker])
-        (endEditRow.arrangedSubviews.first as? UILabel)?.text = "Ajustar fim:"
+        (endEditRow.arrangedSubviews.first as? UILabel)?.text = Strings.SessionDetail.adjustEnd
         (endEditRow.arrangedSubviews.first as? UILabel)?.font = Typography.body(16)
         (endEditRow.arrangedSubviews.first as? UILabel)?.textColor = Colors.textSecondary
         endEditRow.axis = .horizontal

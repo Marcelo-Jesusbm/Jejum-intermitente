@@ -28,8 +28,8 @@ final class HistoryViewController: BaseViewController<HistoryView> {
         contentView.refresh.addTarget(self, action: #selector(reload), for: .valueChanged)
 
         navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(title: "Exportar", style: .plain, target: self, action: #selector(exportCSV)),
-            UIBarButtonItem(title: "Filtros", style: .plain, target: self, action: #selector(showFilters))
+            UIBarButtonItem(title: Strings.History.export, style: .plain, target: self, action: #selector(exportCSV)),
+            UIBarButtonItem(title: Strings.History.Filters.title, style: .plain, target: self, action: #selector(showFilters))
         ]
 
         viewModel.onAppear()
@@ -47,8 +47,8 @@ final class HistoryViewController: BaseViewController<HistoryView> {
         }
         viewModel.onError = { [weak self] msg in
             self?.contentView.refresh.endRefreshing()
-            let alert = UIAlertController(title: "Erro", message: msg, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            let alert = UIAlertController(title: Strings.Common.error, message: msg, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: Strings.Common.ok, style: .default))
             self?.present(alert, animated: true)
         }
     }
@@ -67,26 +67,25 @@ final class HistoryViewController: BaseViewController<HistoryView> {
     }
 
     @objc private func showFilters() {
-        let sheet = UIAlertController(title: "Filtros", message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: "Todos", style: .default, handler: { _ in
+        let sheet = UIAlertController(title: Strings.History.Filters.title, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: Strings.History.Filters.all, style: .default, handler: { _ in
             self.viewModel.setStatusFilter(.all); self.viewModel.setPlanFilter(planId: nil)
         }))
-        sheet.addAction(UIAlertAction(title: "Ativos", style: .default, handler: { _ in
+        sheet.addAction(UIAlertAction(title: Strings.History.Filters.active, style: .default, handler: { _ in
             self.viewModel.setStatusFilter(.active)
         }))
-        sheet.addAction(UIAlertAction(title: "Concluídos", style: .default, handler: { _ in
+        sheet.addAction(UIAlertAction(title: Strings.History.Filters.finished, style: .default, handler: { _ in
             self.viewModel.setStatusFilter(.finished)
         }))
-        // Filtros por plano
         BuiltinPlans.all().forEach { plan in
             sheet.addAction(UIAlertAction(title: plan.name, style: .default, handler: { _ in
                 self.viewModel.setPlanFilter(planId: plan.id)
             }))
         }
-        sheet.addAction(UIAlertAction(title: "Limpar plano", style: .destructive, handler: { _ in
+        sheet.addAction(UIAlertAction(title: Strings.History.Filters.clearPlan, style: .destructive, handler: { _ in
             self.viewModel.setPlanFilter(planId: nil)
         }))
-        sheet.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
+        sheet.addAction(UIAlertAction(title: Strings.History.Filters.cancel, style: .cancel))
         if let pop = sheet.popoverPresentationController {
             pop.barButtonItem = navigationItem.rightBarButtonItems?.last
         }

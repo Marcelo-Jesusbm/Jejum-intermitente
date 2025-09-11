@@ -10,6 +10,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var appCoordinator: ApplicationCoordinator?
+    private var themeObserver: NSObjectProtocol?
 
     func scene(
         _ scene: UIScene,
@@ -23,8 +24,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         self.appCoordinator = appCoordinator
 
+        // Aplica tema inicial
+        if let container = AppEnvironment.shared.container {
+            ThemeManager.shared.load(from: container.settings)
+            ThemeManager.shared.apply(to: window)
+        }
+
+        // Observa mudanças de tema
+        themeObserver = NotificationCenter.default.addObserver(
+            forName: ThemeManager.didChangeNotification,
+            object: nil, queue: .main
+        ) { [weak self] _ in
+            ThemeManager.shared.apply(to: self?.window)
+        }
+
         appCoordinator.start()
         window.makeKeyAndVisible()
+    }
+
+    deinit {
+        if let themeObserver { NotificationCenter.default.removeObserver(themeObserver) }
     }
 }
     func sceneDidDisconnect(_ scene: UIScene) {

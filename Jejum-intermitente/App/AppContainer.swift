@@ -33,11 +33,12 @@ final class AppContainer {
     lazy var setDefaultPlan = SetDefaultPlanUseCase(planRepo: planRepo)
     lazy var computeMetrics = ComputeMetricsUseCase(sessionRepo: sessionRepo)
 
-    // Novos
-    lazy var getSessionById = GetSessionByIdUseCase(sessionRepo: sessionRepo)
-    lazy var updateSessionEndDate = UpdateSessionEndDateUseCase(sessionRepo: sessionRepo)
-    lazy var deleteSession = DeleteSessionUseCase(sessionRepo: sessionRepo)
+    // CSV (já existente)
     lazy var exportHistoryCSV = ExportHistoryCSVUseCase(sessionRepo: sessionRepo)
+
+    // JSON Backup
+    lazy var exportHistoryJSON = ExportHistoryJSONUseCase(sessionRepo: sessionRepo, planRepo: planRepo)
+    lazy var importHistoryJSON = ImportHistoryJSONUseCase(sessionRepo: sessionRepo, setDefaultPlan: setDefaultPlan)
 
     init(
         clock: Clock,
@@ -104,15 +105,20 @@ final class AppContainer {
     }
 
     func makeSettingsViewModel() -> SettingsViewModel {
-        SettingsViewModel(settings: settings, notifications: notifications)
+        SettingsViewModel(
+            settings: settings,
+            notifications: notifications,
+            exportJSON: exportHistoryJSON,
+            importJSON: importHistoryJSON
+        )
     }
 
     func makeSessionDetailViewModel(sessionId: UUID) -> SessionDetailViewModel {
         SessionDetailViewModel(
             sessionId: sessionId,
-            getSessionById: getSessionById,
-            updateEndDate: updateSessionEndDate,
-            deleteSession: deleteSession,
+            getSessionById: GetSessionByIdUseCase(sessionRepo: sessionRepo),
+            updateEndDate: UpdateSessionEndDateUseCase(sessionRepo: sessionRepo),
+            deleteSession: DeleteSessionUseCase(sessionRepo: sessionRepo),
             stopFast: stopFast,
             notifications: notifications
         )

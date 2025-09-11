@@ -19,7 +19,6 @@ public protocol NotificationScheduling {
 public final class UserNotificationsScheduler: NSObject, NotificationScheduling {
     private let center: UNUserNotificationCenter
 
-    // Categorias/Ações
     private let categoryId = "FASTING_CATEGORY"
     private let stopActionId = "STOP_FAST"
 
@@ -31,7 +30,7 @@ public final class UserNotificationsScheduler: NSObject, NotificationScheduling 
     public func registerCategories() {
         let stop = UNNotificationAction(
             identifier: stopActionId,
-            title: "Parar Jejum",
+            title: Strings.Notifications.stopAction,
             options: [.authenticationRequired, .foreground]
         )
         let category = UNNotificationCategory(
@@ -62,22 +61,17 @@ public final class UserNotificationsScheduler: NSObject, NotificationScheduling 
 
     public func scheduleEndOfFastNotification(for session: FastingSession) {
         registerCategories()
-
-        // Calcula intervalo até o fim previsto
         let now = Date()
         let endDate = session.startDate.addingTimeInterval(session.goalDuration)
         let interval = endDate.timeIntervalSince(now)
-        guard interval > 1 else { return } // evita agendar atrasado/zero
+        guard interval > 1 else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "Jejum concluído"
-        content.body = "\(session.planEmoji) Seu jejum \(session.planName) atingiu a meta!"
+        content.title = Strings.Notifications.endTitle
+        content.body = Strings.Notifications.endBody(session.planEmoji, session.planName)
         content.sound = .default
         content.categoryIdentifier = categoryId
-        content.userInfo = [
-            "type": "end_of_fast",
-            "sessionId": session.id.uuidString
-        ]
+        content.userInfo = ["type": "end_of_fast", "sessionId": session.id.uuidString]
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
         let request = UNNotificationRequest(

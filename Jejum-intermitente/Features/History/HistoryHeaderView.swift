@@ -61,7 +61,7 @@ final class HistoryHeaderView: UIView, ViewCode {
     }
 
     func setupViews() {
-        titleLabel.text = "Insights"
+        titleLabel.text = Strings.History.header
         titleLabel.font = Typography.titleBold(22)
         titleLabel.textColor = Colors.textPrimary
 
@@ -77,7 +77,7 @@ final class HistoryHeaderView: UIView, ViewCode {
 
         [stack1, stack2, stack3, stack4].forEach { statsGrid.addArrangedSubview($0) }
 
-        chartTitle.text = "Últimos 14 dias"
+        chartTitle.text = Strings.History.last14
         chartTitle.font = Typography.body(15)
         chartTitle.textColor = Colors.textSecondary
 

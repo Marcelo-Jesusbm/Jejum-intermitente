@@ -39,13 +39,13 @@ final class SessionDetailViewController: BaseViewController<SessionDetailView> {
             self.contentView.durationLabel.text = state.durationLine
             self.contentView.configure(
                 isActive: state.isActive,
-                startDate: nil,
-                endDate: nil
+                startDate: state.startDate,
+                endDate: state.endDate
             )
         }
         viewModel.onError = { [weak self] msg in
-            let alert = UIAlertController(title: "Erro", message: msg, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            let alert = UIAlertController(title: Strings.Common.error, message: msg, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: Strings.Common.ok, style: .default))
             self?.present(alert, animated: true)
         }
         viewModel.onDismiss = { [weak self] in
@@ -56,8 +56,8 @@ final class SessionDetailViewController: BaseViewController<SessionDetailView> {
     @objc private func saveTapped() {
         let date = contentView.endDatePicker.date
         viewModel.saveEndDate(date)
-        let alert = UIAlertController(title: "Salvo", message: "Fim ajustado.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        let alert = UIAlertController(title: Strings.SessionDetail.saved, message: Strings.SessionDetail.savedMsg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: Strings.Common.ok, style: .default))
         present(alert, animated: true)
     }
 
@@ -66,9 +66,9 @@ final class SessionDetailViewController: BaseViewController<SessionDetailView> {
     }
 
     @objc private func deleteTapped() {
-        let alert = UIAlertController(title: "Excluir sessão?", message: "Esta ação não pode ser desfeita.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Excluir", style: .destructive, handler: { _ in
+        let alert = UIAlertController(title: Strings.SessionDetail.deleteAsk, message: Strings.SessionDetail.deleteWarn, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: Strings.Common.cancel, style: .cancel))
+        alert.addAction(UIAlertAction(title: Strings.SessionDetail.delete, style: .destructive, handler: { _ in
             self.viewModel.deleteCurrent()
         }))
         present(alert, animated: true)

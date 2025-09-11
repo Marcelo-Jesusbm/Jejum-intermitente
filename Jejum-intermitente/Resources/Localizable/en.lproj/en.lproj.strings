@@ -5,3 +5,77 @@
   Created by Marcelo Jesus on 11/09/25.
   
 */
+"tab.today" = "Today";
+"tab.history" = "History";
+"tab.plans" = "Plans";
+"tab.settings" = "Settings";
+
+"today.title" = "Fasting Tracker";
+"today.plan.default" = "Default plan: %@";
+"today.plan.current" = "Plan: %@";
+"today.start" = "Start Fast";
+"today.stop" = "Stop Fast";
+"today.started" = "Fast started";
+"today.started.msg" = "Good luck! 🍀";
+"today.stopped" = "Fast finished";
+"today.stopped.msg" = "Great job! 💪";
+"today.start.time" = "Start: %@";
+"today.elapsed" = "Elapsed: %@";
+"today.remaining" = "Remaining: %@";
+
+"history.title" = "History";
+"history.header" = "Insights";
+"history.last14" = "Last 14 days";
+"history.refresh.error" = "Error";
+
+"history.filters.title" = "Filters";
+"history.filters.all" = "All";
+"history.filters.active" = "Active";
+"history.filters.finished" = "Finished";
+"history.filters.clearPlan" = "Clear plan";
+"history.filters.cancel" = "Cancel";
+"history.export" = "Export";
+
+"plans.title" = "Plans";
+"plans.updated" = "Default plan updated";
+
+"settings.title" = "Settings";
+"settings.notifications" = "Notifications";
+"settings.clock24h" = "24h Clock";
+"settings.theme" = "Theme";
+"settings.theme.system" = "System";
+"settings.theme.light" = "Light";
+"settings.theme.dark" = "Dark";
+"settings.toast.on" = "Enabled";
+"settings.toast.off" = "Disabled";
+"settings.notifications.on" = "Notifications enabled";
+"settings.notifications.off" = "Notifications disabled";
+"settings.notifications.denied" = "Permission denied in Settings";
+"settings.clock.on" = "24h Clock enabled";
+"settings.clock.off" = "24h Clock disabled";
+
+"session.detail.title" = "Session";
+"session.detail.plan" = "Plan: %@";
+"session.detail.start" = "Start: %@";
+"session.detail.end.running" = "End: running";
+"session.detail.end" = "End: %@";
+"session.detail.duration" = "Duration: %@";
+"session.detail.adjust.end" = "Adjust end:";
+"session.detail.save" = "Save changes";
+"session.detail.stop.now" = "Stop now";
+"session.detail.delete" = "Delete session";
+"session.detail.saved" = "Saved";
+"session.detail.saved.msg" = "End adjusted.";
+"session.detail.delete.ask" = "Delete session?";
+"session.detail.delete.warn" = "This action cannot be undone.";
+"common.cancel" = "Cancel";
+"common.ok" = "OK";
+"common.error" = "Error";
+
+"notifications.end.title" = "Fasting completed";
+"notifications.end.body" = "%@ Your %@ fast has reached the goal!";
+"notifications.action.stop" = "Stop Fast";
+"settings.export.json" = "Export JSON";
+"settings.import.json" = "Import JSON";
+"settings.import.result" = "Imported: %d • Updated: %d • Skipped: %d";
+"settings.import.failed" = "Import failed";
