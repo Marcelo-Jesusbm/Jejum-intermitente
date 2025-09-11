@@ -14,8 +14,8 @@ final class ApplicationCoordinator: Coordinator {
 
     init(window: UIWindow) {
         self.window = window
-        // Use inMemory: true em UI Tests/Previews se quiser.
         self.container = AppContainer.buildDefault(inMemory: false)
+        AppEnvironment.shared.container = container
         self.tabBarCoordinator = TabBarCoordinator(container: container)
     }
 

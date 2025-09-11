@@ -20,6 +20,9 @@ final class AppContainer {
     // Settings
     let settings: AppSettings
 
+    // Notifications
+    let notifications: NotificationScheduling
+
     // Use cases
     lazy var getActiveSession = GetActiveSessionUseCase(sessionRepo: sessionRepo)
     lazy var startFast = StartFastUseCase(sessionRepo: sessionRepo, planRepo: planRepo, clock: clock)
@@ -28,6 +31,13 @@ final class AppContainer {
     lazy var getAvailablePlans = GetAvailablePlansUseCase(planRepo: planRepo)
     lazy var getDefaultPlan = GetDefaultPlanUseCase(planRepo: planRepo)
     lazy var setDefaultPlan = SetDefaultPlanUseCase(planRepo: planRepo)
+    lazy var computeMetrics = ComputeMetricsUseCase(sessionRepo: sessionRepo)
+
+    // Novos
+    lazy var getSessionById = GetSessionByIdUseCase(sessionRepo: sessionRepo)
+    lazy var updateSessionEndDate = UpdateSessionEndDateUseCase(sessionRepo: sessionRepo)
+    lazy var deleteSession = DeleteSessionUseCase(sessionRepo: sessionRepo)
+    lazy var exportHistoryCSV = ExportHistoryCSVUseCase(sessionRepo: sessionRepo)
 
     init(
         clock: Clock,
@@ -35,7 +45,8 @@ final class AppContainer {
         sessionRepo: FastingSessionRepository,
         planRepo: PlanRepository,
         tickerFactory: @escaping () -> Ticker,
-        settings: AppSettings
+        settings: AppSettings,
+        notifications: NotificationScheduling
     ) {
         self.clock = clock
         self.coreData = coreData
@@ -43,6 +54,7 @@ final class AppContainer {
         self.planRepo = planRepo
         self.tickerFactory = tickerFactory
         self.settings = settings
+        self.notifications = notifications
     }
 
     static func buildDefault(inMemory: Bool = false) -> AppContainer {
@@ -56,11 +68,12 @@ final class AppContainer {
             sessionRepo: sessionRepo,
             planRepo: planRepo,
             tickerFactory: { GCDTicker(queue: .main) },
-            settings: AppSettings()
+            settings: AppSettings(),
+            notifications: UserNotificationsScheduler()
         )
     }
 
-    // Factories de ViewModel
+    // Factories
     func makeTodayViewModel() -> TodayViewModel {
         TodayViewModel(
             getActiveSession: getActiveSession,
@@ -68,12 +81,18 @@ final class AppContainer {
             stopFast: stopFast,
             getDefaultPlan: getDefaultPlan,
             clock: clock,
-            tickerFactory: tickerFactory
+            tickerFactory: tickerFactory,
+            settings: settings,
+            notifications: notifications
         )
     }
 
     func makeHistoryViewModel() -> HistoryViewModel {
-        HistoryViewModel(getHistory: getHistory)
+        HistoryViewModel(
+            getHistory: getHistory,
+            computeMetrics: computeMetrics,
+            exportCSV: exportHistoryCSV
+        )
     }
 
     func makePlansViewModel() -> PlansViewModel {
@@ -85,6 +104,17 @@ final class AppContainer {
     }
 
     func makeSettingsViewModel() -> SettingsViewModel {
-        SettingsViewModel(settings: settings)
+        SettingsViewModel(settings: settings, notifications: notifications)
+    }
+
+    func makeSessionDetailViewModel(sessionId: UUID) -> SessionDetailViewModel {
+        SessionDetailViewModel(
+            sessionId: sessionId,
+            getSessionById: getSessionById,
+            updateEndDate: updateSessionEndDate,
+            deleteSession: deleteSession,
+            stopFast: stopFast,
+            notifications: notifications
+        )
     }
 }

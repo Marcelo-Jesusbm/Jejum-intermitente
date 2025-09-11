@@ -5,11 +5,14 @@
 //  Created by Marcelo Jesus on 10/09/25.
 //
 
+
+
 import UIKit
 
 final class HistoryView: UIView, ViewCode {
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let refresh = UIRefreshControl()
+    let headerView = HistoryHeaderView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -22,6 +25,7 @@ final class HistoryView: UIView, ViewCode {
     func setupHierarchy() {
         addSubview(tableView)
         tableView.addSubview(refresh)
+        tableView.tableHeaderView = headerView
     }
 
     func setupConstraints() {
@@ -38,5 +42,31 @@ final class HistoryView: UIView, ViewCode {
         tableView.backgroundColor = Colors.background
         tableView.register(HistoryCell.self, forCellReuseIdentifier: HistoryCell.reuseId)
         tableView.rowHeight = 64
+
+        // Definir tamanho do header
+        layoutHeaderToFit()
+    }
+
+    func updateHeader(with summary: MetricsSummary) {
+        headerView.fill(with: summary)
+        layoutHeaderToFit()
+    }
+
+    private func layoutHeaderToFit() {
+        let targetSize = CGSize(width: bounds.width, height: UIView.layoutFittingCompressedSize.height)
+        let height = headerView.systemLayoutSizeFitting(
+            targetSize,
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+        var frame = headerView.frame
+        frame.size = CGSize(width: bounds.width, height: height)
+        headerView.frame = frame
+        tableView.tableHeaderView = headerView
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layoutHeaderToFit()
     }
 }

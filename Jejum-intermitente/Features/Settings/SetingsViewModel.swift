@@ -7,8 +7,6 @@
 
 import Foundation
 
-import Foundation
-
 final class SettingsViewModel {
     struct Row {
         let title: String
@@ -20,9 +18,11 @@ final class SettingsViewModel {
     var onToast: ((String) -> Void)?
 
     private let settings: AppSettings
+    private let notifications: NotificationScheduling
 
-    init(settings: AppSettings) {
+    init(settings: AppSettings, notifications: NotificationScheduling) {
         self.settings = settings
+        this.notifications = notifications
     }
 
     func onAppear() {
@@ -40,14 +40,32 @@ final class SettingsViewModel {
     func toggle(key: String, isOn: Bool) {
         switch key {
         case "notifications":
-            settings.notificationsEnabled = isOn
-            onToast?("Notificações \(isOn ? "ativadas" : "desativadas")")
+            if isOn {
+                notifications.requestAuthorizationIfNeeded { [weak self] granted in
+                    guard let self else { return }
+                    DispatchQueue.main.async {
+                        if granted {
+                            self.settings.notificationsEnabled = true
+                            self.onToast?("Notificações ativadas")
+                        } else {
+                            self.settings.notificationsEnabled = false
+                            self.onToast?("Permissão negada nas Configurações")
+                        }
+                        self.emit()
+                    }
+                }
+            } else {
+                settings.notificationsEnabled = false
+                notifications.cancelAll()
+                onToast?("Notificações desativadas")
+                emit()
+            }
         case "24h":
             settings.use24hClock = isOn
             onToast?("Relógio 24h \(isOn ? "ativado" : "desativado")")
+            emit()
         default:
             break
         }
-        emit()
     }
 }

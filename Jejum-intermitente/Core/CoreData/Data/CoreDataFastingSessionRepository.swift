@@ -21,24 +21,19 @@ final class CoreDataFastingSessionRepository: FastingSessionRepository {
             req.predicate = NSPredicate(format: "endDate == nil")
             req.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: false)]
             req.fetchLimit = 1
-            let results = try ctx.fetch(req)
-            return results.first.map(FastingSessionMapper.toDomain)
+            return try ctx.fetch(req).first.map(FastingSessionMapper.toDomain)
         }
     }
 
     func start(startDate: Date, plan: FastingPlan) throws -> FastingSession {
         try coreData.performAndWait { ctx in
-            // Impede sessões simultâneas
-            let active = try self.fetchActive()
-            if active != nil { throw DomainError.activeSessionExists }
-
+            if try self.fetchActive() != nil { throw DomainError.activeSessionExists }
             guard let entity = NSEntityDescription.insertNewObject(
                 forEntityName: CoreDataModel.fastingSessionEntityName,
                 into: ctx
             ) as? FastingSessionEntity else {
                 throw DomainError.invalidOperation("Falha ao criar entidade de sessão.")
             }
-
             let domain = FastingSession(
                 planId: plan.id,
                 planName: plan.name,
@@ -47,7 +42,6 @@ final class CoreDataFastingSessionRepository: FastingSessionRepository {
                 startDate: startDate,
                 endDate: nil
             )
-
             FastingSessionMapper.apply(domain, into: entity)
             try coreData.save(context: ctx)
             return FastingSessionMapper.toDomain(entity)
@@ -74,19 +68,16 @@ final class CoreDataFastingSessionRepository: FastingSessionRepository {
             let req: NSFetchRequest<FastingSessionEntity> = FastingSessionEntity.fetchRequest()
             req.predicate = NSPredicate(format: "id == %@", session.id as CVarArg)
             req.fetchLimit = 1
-            guard let entity = try ctx.fetch(req).first else {
-                // Se não encontrar, insere (upsert simples)
+            if let entity = try ctx.fetch(req).first {
+                FastingSessionMapper.apply(session, into: entity)
+            } else {
                 guard let newEntity = NSEntityDescription.insertNewObject(
-                    forEntityName: CoreDataModel.fastingSessionEntityName,
-                    into: ctx
+                    forEntityName: CoreDataModel.fastingSessionEntityName, into: ctx
                 ) as? FastingSessionEntity else {
                     throw DomainError.invalidOperation("Falha no upsert de sessão.")
                 }
                 FastingSessionMapper.apply(session, into: newEntity)
-                try coreData.save(context: ctx)
-                return
             }
-            FastingSessionMapper.apply(session, into: entity)
             try coreData.save(context: ctx)
         }
     }
@@ -97,8 +88,28 @@ final class CoreDataFastingSessionRepository: FastingSessionRepository {
             req.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: false)]
             if let limit = limit { req.fetchLimit = limit }
             req.fetchOffset = offset
-            let results = try ctx.fetch(req)
-            return results.map(FastingSessionMapper.toDomain)
+            return try ctx.fetch(req).map(FastingSessionMapper.toDomain)
+        }
+    }
+
+    func fetchById(_ id: UUID) throws -> FastingSession? {
+        try coreData.performAndWait { ctx in
+            let req: NSFetchRequest<FastingSessionEntity> = FastingSessionEntity.fetchRequest()
+            req.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+            req.fetchLimit = 1
+            return try ctx.fetch(req).first.map(FastingSessionMapper.toDomain)
+        }
+    }
+
+    func delete(id: UUID) throws {
+        try coreData.performAndWait { ctx in
+            let req: NSFetchRequest<FastingSessionEntity> = FastingSessionEntity.fetchRequest()
+            req.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+            req.fetchLimit = 1
+            if let entity = try ctx.fetch(req).first {
+                ctx.delete(entity)
+                try coreData.save(context: ctx)
+            }
         }
     }
 }

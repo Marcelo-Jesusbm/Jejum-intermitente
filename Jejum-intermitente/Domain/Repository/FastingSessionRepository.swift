@@ -13,4 +13,8 @@ public protocol FastingSessionRepository {
     func stopActive(endDate: Date) throws -> FastingSession
     func update(_ session: FastingSession) throws
     func fetchHistory(limit: Int?, offset: Int) throws -> [FastingSession]
+
+    // Novos
+    func fetchById(_ id: UUID) throws -> FastingSession?
+    func delete(id: UUID) throws
 }

@@ -35,6 +35,10 @@ final class TodayViewModel {
     private let clock: Clock
     private let tickerFactory: () -> Ticker
 
+    // Ajustes e notificações
+    private let settings: AppSettings
+    private let notifications: NotificationScheduling
+
     // Estado atual
     private(set) var activeSession: FastingSession?
     private var ticker: Ticker?
@@ -48,6 +52,8 @@ final class TodayViewModel {
         getDefaultPlan: GetDefaultPlanUseCase,
         clock: Clock,
         tickerFactory: @escaping () -> Ticker,
+        settings: AppSettings,
+        notifications: NotificationScheduling,
         notificationCenter: NotificationCenter = .default
     ) {
         self.getActiveSession = getActiveSession
@@ -56,6 +62,8 @@ final class TodayViewModel {
         self.getDefaultPlan = getDefaultPlan
         self.clock = clock
         self.tickerFactory = tickerFactory
+        self.settings = settings
+        self.notifications = notifications
         self.notificationCenter = notificationCenter
         observeLifecycle()
     }
@@ -91,6 +99,14 @@ final class TodayViewModel {
             _ = getDefaultPlan.execute() // futuro: permitir seleção
             let session = try startFast.execute(.init())
             self.activeSession = session
+            if settings.notificationsEnabled {
+                notifications.requestAuthorizationIfNeeded { [weak self] granted in
+                    guard let self else { return }
+                    if granted {
+                        self.notifications.scheduleEndOfFastNotification(for: session)
+                    }
+                }
+            }
             onStartFast?()
             startTickerIfNeeded()
             emitState()
@@ -101,7 +117,10 @@ final class TodayViewModel {
 
     private func stop() {
         do {
-            _ = try stopFast.execute()
+            let stopped = try stopFast.execute()
+            if settings.notificationsEnabled {
+                notifications.cancelEndOfFastNotification(sessionId: stopped.id)
+            }
             self.activeSession = nil
             onStopFast?()
             stopTicker()
