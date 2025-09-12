@@ -41,11 +41,13 @@ final class HistoryViewController: BaseViewController<HistoryView> {
             self.rows = rows
             self.contentView.tableView.reloadData()
             self.contentView.refresh.endRefreshing()
+            self.contentView.setEmpty(rows.isEmpty)
         }
         viewModel.onMetrics = { [weak self] summary in
             self?.contentView.updateHeader(with: summary)
         }
         viewModel.onError = { [weak self] msg in
+            Haptics.error()
             self?.contentView.refresh.endRefreshing()
             let alert = UIAlertController(title: Strings.Common.error, message: msg, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: Strings.Common.ok, style: .default))
@@ -58,6 +60,7 @@ final class HistoryViewController: BaseViewController<HistoryView> {
     }
 
     @objc private func exportCSV() {
+        Haptics.lightImpact()
         viewModel.buildCSV { [weak self] csv in
             guard let self else { return }
             let vc = UIActivityViewController(activityItems: [csv], applicationActivities: nil)
@@ -67,6 +70,7 @@ final class HistoryViewController: BaseViewController<HistoryView> {
     }
 
     @objc private func showFilters() {
+        Haptics.lightImpact()
         let sheet = UIAlertController(title: Strings.History.Filters.title, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: Strings.History.Filters.all, style: .default, handler: { _ in
             self.viewModel.setStatusFilter(.all); self.viewModel.setPlanFilter(planId: nil)
@@ -101,6 +105,7 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        Haptics.lightImpact()
         viewModel.didSelectRow(at: indexPath.row, in: rows)
         tableView.deselectRow(at: indexPath, animated: true)
     }

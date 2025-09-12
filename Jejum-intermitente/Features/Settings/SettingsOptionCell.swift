@@ -17,6 +17,8 @@ final class SettingsOptionCell: UITableViewCell, ViewCode {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         accessoryType = .disclosureIndicator
         buildView()
+        isAccessibilityElement = true
+        accessibilityTraits.insert(.button)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -40,10 +42,12 @@ final class SettingsOptionCell: UITableViewCell, ViewCode {
     func setupConstraints() {}
 
     func setupViews() {
-        titleLabel.font = Typography.body(17)
+        titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.textColor = Colors.textPrimary
 
-        valueLabel.font = Typography.caption(12)
+        valueLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+        valueLabel.adjustsFontForContentSizeCategory = true
         valueLabel.textColor = Colors.textSecondary
         valueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
@@ -51,5 +55,7 @@ final class SettingsOptionCell: UITableViewCell, ViewCode {
     func fill(title: String, value: String) {
         titleLabel.text = title
         valueLabel.text = value
+        accessibilityLabel = "\(title), valor atual: \(value)"
+        accessibilityHint = "Toque para alterar"
     }
 }

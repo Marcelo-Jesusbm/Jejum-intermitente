@@ -8,6 +8,14 @@
 import Foundation
 
 final class InMemoryFastingSessionRepository: FastingSessionRepository {
+    func fetchById(_ id: UUID) throws -> FastingSession? {
+        
+    }
+    
+    func delete(id: UUID) throws {
+        
+    }
+    
     private var sessions: [FastingSession] = []
 
     func fetchActive() throws -> FastingSession? {

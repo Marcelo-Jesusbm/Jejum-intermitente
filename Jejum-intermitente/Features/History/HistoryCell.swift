@@ -19,6 +19,8 @@ final class HistoryCell: UITableViewCell, ViewCode {
         buildView()
         accessoryType = .disclosureIndicator
         selectionStyle = .default
+        isAccessibilityElement = true
+        accessibilityTraits.insert(.button)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -48,12 +50,16 @@ final class HistoryCell: UITableViewCell, ViewCode {
     func setupConstraints() {}
 
     func setupViews() {
-        titleLabel.font = Typography.body(17)
+        titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.textColor = Colors.textPrimary
-        subtitleLabel.font = Typography.caption(12)
+
+        subtitleLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+        subtitleLabel.adjustsFontForContentSizeCategory = true
         subtitleLabel.textColor = Colors.textSecondary
 
-        trailingLabel.font = Typography.caption(12)
+        trailingLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+        trailingLabel.adjustsFontForContentSizeCategory = true
         trailingLabel.textColor = Colors.textSecondary
         trailingLabel.textAlignment = .right
         trailingLabel.numberOfLines = 1
@@ -64,6 +70,7 @@ final class HistoryCell: UITableViewCell, ViewCode {
         titleLabel.text = row.title
         subtitleLabel.text = row.subtitle
         trailingLabel.text = row.trailing
-        accessoryType = .disclosureIndicator
+
+        accessibilityLabel = "\(row.title). \(row.subtitle). Duração \(row.trailing)"
     }
 }

@@ -18,6 +18,8 @@ final class PlanCell: UITableViewCell, ViewCode {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         buildView()
         selectionStyle = .default
+        isAccessibilityElement = true
+        accessibilityTraits.insert(.button)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -47,10 +49,15 @@ final class PlanCell: UITableViewCell, ViewCode {
     func setupConstraints() {}
 
     func setupViews() {
-        emojiLabel.font = UIFont.systemFont(ofSize: 20)
-        titleLabel.font = Typography.body(17)
+        emojiLabel.font = UIFont.preferredFont(forTextStyle: .title2)
+        emojiLabel.adjustsFontForContentSizeCategory = true
+
+        titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.textColor = Colors.textPrimary
-        subtitleLabel.font = Typography.caption(12)
+
+        subtitleLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+        subtitleLabel.adjustsFontForContentSizeCategory = true
         subtitleLabel.textColor = Colors.textSecondary
     }
 
@@ -59,5 +66,7 @@ final class PlanCell: UITableViewCell, ViewCode {
         titleLabel.text = row.title
         subtitleLabel.text = row.subtitle
         accessoryType = row.isSelected ? .checkmark : .none
+
+        accessibilityLabel = "\(row.emoji) \(row.title). \(row.subtitle). \(row.isSelected ? "Selecionado" : "Não selecionado")"
     }
 }

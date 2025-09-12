@@ -6,7 +6,8 @@
 //
 
 import Foundation
-@testable import FastingApp
+
+@testable import Jejum_intermitente
 
 final class FixedClock: Clock {
     private(set) var current: Date

@@ -19,6 +19,8 @@ final class SettingsSwitchCell: UITableViewCell, ViewCode {
         buildView()
         selectionStyle = .none
         toggle.addTarget(self, action: #selector(didToggle), for: .valueChanged)
+        isAccessibilityElement = true
+        accessibilityTraits.insert(.button)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -42,16 +44,23 @@ final class SettingsSwitchCell: UITableViewCell, ViewCode {
     func setupConstraints() {}
 
     func setupViews() {
-        titleLabel.font = Typography.body(17)
+        titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.textColor = Colors.textPrimary
     }
 
     func fill(title: String, isOn: Bool) {
         titleLabel.text = title
         toggle.isOn = isOn
+
+        accessibilityLabel = title
+        accessibilityValue = isOn ? "Ativado" : "Desativado"
+        accessibilityHint = "Toque duas vezes para alternar"
     }
 
     @objc private func didToggle() {
+        Haptics.lightImpact()
         onToggle?(toggle.isOn)
+        UIAccessibility.post(notification: .announcement, argument: "\(titleLabel.text ?? "") \(toggle.isOn ? "ativado" : "desativado")")
     }
 }

@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		CB75DF782E743BEA00ED47B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB75DE772E71B53000ED47B5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB75DE7E2E71B53000ED47B5;
+			remoteInfo = "Jejum-intermitente";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		CB75DE7F2E71B53000ED47B5 /* Jejum-intermitente.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Jejum-intermitente.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB75DF742E743BEA00ED47B5 /* @testable import <Jejum-intermitente>.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "@testable import <Jejum-intermitente>.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -29,10 +40,22 @@
 			path = "Jejum-intermitente";
 			sourceTree = "<group>";
 		};
+		CB75DF752E743BEA00ED47B5 /* Jejum-intermitenteTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Jejum-intermitenteTests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		CB75DE7C2E71B53000ED47B5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB75DF712E743BEA00ED47B5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				CB75DE812E71B53000ED47B5 /* Jejum-intermitente */,
+				CB75DF752E743BEA00ED47B5 /* Jejum-intermitenteTests */,
 				CB75DE802E71B53000ED47B5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				CB75DE7F2E71B53000ED47B5 /* Jejum-intermitente.app */,
+				CB75DF742E743BEA00ED47B5 /* @testable import <Jejum-intermitente>.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,6 +108,29 @@
 			productReference = CB75DE7F2E71B53000ED47B5 /* Jejum-intermitente.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CB75DF732E743BEA00ED47B5 /* Jejum-intermitenteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB75DF7A2E743BEA00ED47B5 /* Build configuration list for PBXNativeTarget "Jejum-intermitenteTests" */;
+			buildPhases = (
+				CB75DF702E743BEA00ED47B5 /* Sources */,
+				CB75DF712E743BEA00ED47B5 /* Frameworks */,
+				CB75DF722E743BEA00ED47B5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CB75DF792E743BEA00ED47B5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CB75DF752E743BEA00ED47B5 /* Jejum-intermitenteTests */,
+			);
+			name = "Jejum-intermitenteTests";
+			packageProductDependencies = (
+			);
+			productName = "Jejum-intermitenteTests";
+			productReference = CB75DF742E743BEA00ED47B5 /* @testable import <Jejum-intermitente>.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -95,6 +143,10 @@
 				TargetAttributes = {
 					CB75DE7E2E71B53000ED47B5 = {
 						CreatedOnToolsVersion = 16.4;
+					};
+					CB75DF732E743BEA00ED47B5 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = CB75DE7E2E71B53000ED47B5;
 					};
 				};
 			};
@@ -113,12 +165,20 @@
 			projectRoot = "";
 			targets = (
 				CB75DE7E2E71B53000ED47B5 /* Jejum-intermitente */,
+				CB75DF732E743BEA00ED47B5 /* Jejum-intermitenteTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CB75DE7D2E71B53000ED47B5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB75DF722E743BEA00ED47B5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -135,7 +195,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CB75DF702E743BEA00ED47B5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CB75DF792E743BEA00ED47B5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB75DE7E2E71B53000ED47B5 /* Jejum-intermitente */;
+			targetProxy = CB75DF782E743BEA00ED47B5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		CB75DE932E71B53400ED47B5 /* Debug */ = {
@@ -321,6 +396,42 @@
 			};
 			name = Release;
 		};
+		CB75DF7B2E743BEA00ED47B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MHKUN88Z97;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "JesusMarcelo.co.Jejum-intermitenteTests";
+				PRODUCT_NAME = "@testable import <Jejum-intermitente>";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Jejum-intermitente.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Jejum-intermitente";
+			};
+			name = Debug;
+		};
+		CB75DF7C2E743BEA00ED47B5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MHKUN88Z97;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "JesusMarcelo.co.Jejum-intermitenteTests";
+				PRODUCT_NAME = "@testable import <Jejum-intermitente>";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Jejum-intermitente.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Jejum-intermitente";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -338,6 +449,15 @@
 			buildConfigurations = (
 				CB75DE932E71B53400ED47B5 /* Debug */,
 				CB75DE942E71B53400ED47B5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB75DF7A2E743BEA00ED47B5 /* Build configuration list for PBXNativeTarget "Jejum-intermitenteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB75DF7B2E743BEA00ED47B5 /* Debug */,
+				CB75DF7C2E743BEA00ED47B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

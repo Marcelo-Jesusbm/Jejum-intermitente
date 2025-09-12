@@ -15,7 +15,9 @@ final class TodayViewController: BaseViewController<TodayView> {
         setupBindings()
     }
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,18 +32,25 @@ final class TodayViewController: BaseViewController<TodayView> {
         }
 
         viewModel.onStartFast = { [weak self] in
+            guard let self else { return }
+            Haptics.success()
+            UIAccessibility.post(notification: .announcement, argument: Strings.Today.started)
             let alert = UIAlertController(title: Strings.Today.started, message: Strings.Today.startedMsg, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: Strings.Common.ok, style: .default))
-            self?.present(alert, animated: true)
+            self.present(alert, animated: true)
         }
 
         viewModel.onStopFast = { [weak self] in
+            guard let self else { return }
+            Haptics.success()
+            UIAccessibility.post(notification: .announcement, argument: Strings.Today.stopped)
             let alert = UIAlertController(title: Strings.Today.stopped, message: Strings.Today.stoppedMsg, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: Strings.Common.ok, style: .default))
-            self?.present(alert, animated: true)
+            self.present(alert, animated: true)
         }
 
         viewModel.onError = { [weak self] message in
+            Haptics.error()
             let alert = UIAlertController(title: Strings.Common.error, message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: Strings.Common.ok, style: .default))
             self?.present(alert, animated: true)
@@ -49,6 +58,7 @@ final class TodayViewController: BaseViewController<TodayView> {
     }
 
     @objc private func didTapAction() {
+        Haptics.lightImpact()
         viewModel.toggleFast()
     }
 }
