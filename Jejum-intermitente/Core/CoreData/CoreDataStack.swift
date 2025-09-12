@@ -57,7 +57,7 @@ final class CoreDataStack {
         }
     }
 
-    func performAndWait<T>(_ block: (NSManagedObjectContext) throws -> T) rethrows -> T {
+    func performAndWait<T>(_ block: (NSManagedObjectContext) throws -> T) throws -> T {
         var result: Result<T, Error>!
         let context = viewContext
         context.performAndWait {

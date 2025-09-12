@@ -122,3 +122,28 @@ extension SettingsViewController: UIDocumentPickerDelegate {
         }
     }
 }
+
+extension SettingsViewController {
+    func presentThemeSheet() {
+        let sheet = UIAlertController(title: Strings.Settings.theme, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: Strings.Settings.themeSystem, style: .default, handler: { [weak self] _ in
+            self?.viewModel.selectTheme(.system)
+        }))
+        sheet.addAction(UIAlertAction(title: Strings.Settings.themeLight, style: .default, handler: { [weak self] _ in
+            self?.viewModel.selectTheme(.light)
+        }))
+        sheet.addAction(UIAlertAction(title: Strings.Settings.themeDark, style: .default, handler: { [weak self] _ in
+            self?.viewModel.selectTheme(.dark)
+        }))
+        sheet.addAction(UIAlertAction(title: Strings.Common.cancel, style: .cancel))
+
+        // iPad: configurar popover para evitar crash
+        if let pop = sheet.popoverPresentationController {
+            pop.sourceView = self.view
+            pop.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 1, height: 1)
+            pop.permittedArrowDirections = []
+        }
+
+        present(sheet, animated: true)
+    }
+}

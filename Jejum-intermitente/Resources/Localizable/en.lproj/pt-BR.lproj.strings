@@ -53,6 +53,10 @@
 "settings.notifications.denied" = "Permissão negada nas Configurações";
 "settings.clock.on" = "Relógio 24h ativado";
 "settings.clock.off" = "Relógio 24h desativado";
+"settings.export.json" = "Exportar JSON";
+"settings.import.json" = "Importar JSON";
+"settings.import.result" = "Importadas: %d • Atualizadas: %d • Ignoradas: %d";
+"settings.import.failed" = "Falha ao importar";
 
 "session.detail.title" = "Sessão";
 "session.detail.plan" = "Plano: %@";
@@ -75,7 +79,10 @@
 "notifications.end.title" = "Jejum concluído";
 "notifications.end.body" = "%@ Seu jejum %@ atingiu a meta!";
 "notifications.action.stop" = "Parar Jejum";
-"settings.export.json" = "Exportar JSON";
-"settings.import.json" = "Importar JSON";
-"settings.import.result" = "Importadas: %d • Atualizadas: %d • Ignoradas: %d";
-"settings.import.failed" = "Falha ao importar";
+
+"settings.health" = "Salvar no Saúde";
+"settings.health.on" = "Apple Saúde ativado";
+"settings.health.off" = "Apple Saúde desativado";
+"settings.health.denied" = "Permissão do Saúde negada";
+"NSHealthShareUsageDescription" = "O app grava períodos de jejum como minutos de atenção no app Saúde.";
+"NSHealthUpdateUsageDescription" = "O app precisa atualizar seus dados de Saúde ao registrar ou editar jejuns.";

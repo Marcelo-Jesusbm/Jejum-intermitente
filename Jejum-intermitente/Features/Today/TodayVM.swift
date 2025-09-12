@@ -32,6 +32,7 @@ final class TodayViewModel {
     private let tickerFactory: () -> Ticker
     private let settings: AppSettings
     private let notifications: NotificationScheduling
+    private let health: HealthStoreManaging
 
     private(set) var activeSession: FastingSession?
     private var ticker: Ticker?
@@ -47,6 +48,7 @@ final class TodayViewModel {
         tickerFactory: @escaping () -> Ticker,
         settings: AppSettings,
         notifications: NotificationScheduling,
+        health: HealthStoreManaging,
         notificationCenter: NotificationCenter = .default
     ) {
         self.getActiveSession = getActiveSession
@@ -57,6 +59,7 @@ final class TodayViewModel {
         self.tickerFactory = tickerFactory
         self.settings = settings
         self.notifications = notifications
+        self.health = health
         self.notificationCenter = notificationCenter
         observeLifecycle()
     }
@@ -109,6 +112,22 @@ final class TodayViewModel {
             let stopped = try stopFast.execute()
             if settings.notificationsEnabled {
                 notifications.cancelEndOfFastNotification(sessionId: stopped.id)
+            }
+            // HealthKit: salva mindful session ao concluir
+            if settings.healthEnabled, let end = stopped.endDate {
+                health.requestAuthorizationIfNeeded { [weak self] granted in
+                    guard let self else { return }
+                    if granted {
+                        self.health.upsertFastingSession(
+                            sessionId: stopped.id,
+                            start: stopped.startDate,
+                            end: end,
+                            planName: stopped.planName,
+                            planEmoji: stopped.planEmoji,
+                            completion: nil
+                        )
+                    }
+                }
             }
             self.activeSession = nil
             onStopFast?()

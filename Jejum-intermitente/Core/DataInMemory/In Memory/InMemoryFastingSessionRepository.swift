@@ -8,54 +8,81 @@
 import Foundation
 
 final class InMemoryFastingSessionRepository: FastingSessionRepository {
-    func fetchById(_ id: UUID) throws -> FastingSession? {
-        
+    private var store: [UUID: FastingSession] = [:]
+    private let queue = DispatchQueue(label: "InMemoryFastingSessionRepository.queue", qos: .userInitiated)
+
+    init(seed: [FastingSession] = []) {
+        seed.forEach { store[$0.id] = $0 }
     }
-    
-    func delete(id: UUID) throws {
-        
-    }
-    
-    private var sessions: [FastingSession] = []
 
     func fetchActive() throws -> FastingSession? {
-        sessions.first(where: { $0.endDate == nil })
+        try queue.sync {
+            store.values
+                .filter { $0.endDate == nil }
+                .sorted(by: { $0.startDate > $1.startDate })
+                .first
+        }
     }
 
     func start(startDate: Date, plan: FastingPlan) throws -> FastingSession {
-        if let _ = try fetchActive() {
-            throw DomainError.activeSessionExists
+        try queue.sync {
+            if store.values.contains(where: { $0.endDate == nil }) {
+                throw DomainError.activeSessionExists
+            }
+            let session = FastingSession(
+                planId: plan.id,
+                planName: plan.name,
+                planEmoji: plan.emoji,
+                goalDuration: plan.fastingDuration,
+                startDate: startDate,
+                endDate: nil
+            )
+            store[session.id] = session
+            return session
         }
-        let session = FastingSession(
-            planId: plan.id,
-            planName: plan.name,
-            planEmoji: plan.emoji,
-            goalDuration: plan.fastingDuration,
-            startDate: startDate,
-            endDate: nil
-        )
-        sessions.insert(session, at: 0)
-        return session
     }
 
     func stopActive(endDate: Date) throws -> FastingSession {
-        guard let idx = sessions.firstIndex(where: { $0.endDate == nil }) else {
-            throw DomainError.noActiveSession
+        try queue.sync {
+            guard let active = store.values.first(where: { $0.endDate == nil }) else {
+                throw DomainError.noActiveSession
+            }
+            var updated = active
+            updated.endDate = endDate
+            store[updated.id] = updated
+            return updated
         }
-        let stopped = sessions[idx].stopping(at: endDate)
-        sessions[idx] = stopped
-        return stopped
     }
 
+    // Upsert
     func update(_ session: FastingSession) throws {
-        if let idx = sessions.firstIndex(where: { $0.id == session.id }) {
-            sessions[idx] = session
+        try queue.sync {
+            store[session.id] = session
         }
     }
 
     func fetchHistory(limit: Int?, offset: Int) throws -> [FastingSession] {
-        let slice = sessions.dropFirst(offset)
-        if let limit = limit { return Array(slice.prefix(limit)) }
-        return Array(slice)
+        try queue.sync {
+            var all = store.values.sorted(by: { $0.startDate > $1.startDate })
+            if offset > 0 {
+                all = Array(all.dropFirst(offset))
+            }
+            if let limit = limit {
+                all = Array(all.prefix(limit))
+            }
+            return all
+        }
+    }
+
+    func fetchById(_ id: UUID) throws -> FastingSession? {
+        try queue.sync {
+            store[id]
+        }
+    }
+
+    func delete(id: UUID) throws {
+        try queue.sync {
+            store.removeValue(forKey: id)
+        }
     }
 }

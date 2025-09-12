@@ -30,6 +30,7 @@ final class SessionDetailViewModel {
     private let deleteSession: DeleteSessionUseCase
     private let stopFast: StopFastUseCase
     private let notifications: NotificationScheduling
+    private let health: HealthStoreManaging
     private let settings: AppSettings = AppEnvironment.shared.container.settings
 
     private var session: FastingSession?
@@ -40,7 +41,8 @@ final class SessionDetailViewModel {
         updateEndDate: UpdateSessionEndDateUseCase,
         deleteSession: DeleteSessionUseCase,
         stopFast: StopFastUseCase,
-        notifications: NotificationScheduling
+        notifications: NotificationScheduling,
+        health: HealthStoreManaging
     ) {
         self.sessionId = sessionId
         self.getSessionById = getSessionById
@@ -48,6 +50,7 @@ final class SessionDetailViewModel {
         self.deleteSession = deleteSession
         self.stopFast = stopFast
         self.notifications = notifications
+        self.health = health
     }
 
     func onAppear() {
@@ -88,6 +91,22 @@ final class SessionDetailViewModel {
             let stopped = try stopFast.execute()
             notifications.cancelEndOfFastNotification(sessionId: stopped.id)
             self.session = stopped
+            // HealthKit: gravar ao parar
+            if settings.healthEnabled, let end = stopped.endDate {
+                health.requestAuthorizationIfNeeded { [weak self] granted in
+                    guard let self else { return }
+                    if granted {
+                        self.health.upsertFastingSession(
+                            sessionId: stopped.id,
+                            start: stopped.startDate,
+                            end: end,
+                            planName: stopped.planName,
+                            planEmoji: stopped.planEmoji,
+                            completion: nil
+                        )
+                    }
+                }
+            }
             emitState()
             onDidChange?()
         } catch {
@@ -99,6 +118,22 @@ final class SessionDetailViewModel {
         do {
             let updated = try updateEndDate.execute(id: sessionId, newEndDate: newDate)
             self.session = updated
+            // HealthKit: regrava amostra com novo fim
+            if settings.healthEnabled, let end = updated.endDate {
+                health.requestAuthorizationIfNeeded { [weak self] granted in
+                    guard let self else { return }
+                    if granted {
+                        self.health.upsertFastingSession(
+                            sessionId: updated.id,
+                            start: updated.startDate,
+                            end: end,
+                            planName: updated.planName,
+                            planEmoji: updated.planEmoji,
+                            completion: nil
+                        )
+                    }
+                }
+            }
             emitState()
             onDidChange?()
         } catch {
@@ -112,6 +147,10 @@ final class SessionDetailViewModel {
                 notifications.cancelEndOfFastNotification(sessionId: s.id)
             }
             try deleteSession.execute(id: sessionId)
+            // HealthKit: apagar amostra associada
+            if settings.healthEnabled {
+                health.deleteFastingSession(sessionId: sessionId, completion: nil)
+            }
             onDidChange?()
             onDismiss?()
         } catch {

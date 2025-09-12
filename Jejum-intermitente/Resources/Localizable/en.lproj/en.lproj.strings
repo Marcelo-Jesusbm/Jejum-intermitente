@@ -53,6 +53,10 @@
 "settings.notifications.denied" = "Permission denied in Settings";
 "settings.clock.on" = "24h Clock enabled";
 "settings.clock.off" = "24h Clock disabled";
+"settings.export.json" = "Export JSON";
+"settings.import.json" = "Import JSON";
+"settings.import.result" = "Imported: %d • Updated: %d • Skipped: %d";
+"settings.import.failed" = "Import failed";
 
 "session.detail.title" = "Session";
 "session.detail.plan" = "Plan: %@";
@@ -75,7 +79,10 @@
 "notifications.end.title" = "Fasting completed";
 "notifications.end.body" = "%@ Your %@ fast has reached the goal!";
 "notifications.action.stop" = "Stop Fast";
-"settings.export.json" = "Export JSON";
-"settings.import.json" = "Import JSON";
-"settings.import.result" = "Imported: %d • Updated: %d • Skipped: %d";
-"settings.import.failed" = "Import failed";
+
+"settings.health" = "Save to Health";
+"settings.health.on" = "Apple Health enabled";
+"settings.health.off" = "Apple Health disabled";
+"settings.health.denied" = "Health permission denied";
+"NSHealthShareUsageDescription" = "The app writes fasting periods as Mindful Minutes to the Health app.";
+"NSHealthUpdateUsageDescription" = "The app needs to update your Health data when recording or editing fasts.";

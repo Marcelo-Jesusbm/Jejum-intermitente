@@ -23,6 +23,9 @@ final class AppContainer {
     // Notifications
     let notifications: NotificationScheduling
 
+    // Health
+    let health: HealthStoreManaging
+
     // Use cases
     lazy var getActiveSession = GetActiveSessionUseCase(sessionRepo: sessionRepo)
     lazy var startFast = StartFastUseCase(sessionRepo: sessionRepo, planRepo: planRepo, clock: clock)
@@ -33,10 +36,8 @@ final class AppContainer {
     lazy var setDefaultPlan = SetDefaultPlanUseCase(planRepo: planRepo)
     lazy var computeMetrics = ComputeMetricsUseCase(sessionRepo: sessionRepo)
 
-    // CSV (já existente)
+    // CSV / JSON Backup
     lazy var exportHistoryCSV = ExportHistoryCSVUseCase(sessionRepo: sessionRepo)
-
-    // JSON Backup
     lazy var exportHistoryJSON = ExportHistoryJSONUseCase(sessionRepo: sessionRepo, planRepo: planRepo)
     lazy var importHistoryJSON = ImportHistoryJSONUseCase(sessionRepo: sessionRepo, setDefaultPlan: setDefaultPlan)
 
@@ -47,7 +48,8 @@ final class AppContainer {
         planRepo: PlanRepository,
         tickerFactory: @escaping () -> Ticker,
         settings: AppSettings,
-        notifications: NotificationScheduling
+        notifications: NotificationScheduling,
+        health: HealthStoreManaging
     ) {
         self.clock = clock
         self.coreData = coreData
@@ -56,6 +58,7 @@ final class AppContainer {
         self.tickerFactory = tickerFactory
         self.settings = settings
         self.notifications = notifications
+        self.health = health
     }
 
     static func buildDefault(inMemory: Bool = false) -> AppContainer {
@@ -70,7 +73,8 @@ final class AppContainer {
             planRepo: planRepo,
             tickerFactory: { GCDTicker(queue: .main) },
             settings: AppSettings(),
-            notifications: UserNotificationsScheduler()
+            notifications: UserNotificationsScheduler(),
+            health: HealthKitService()
         )
     }
 
@@ -84,7 +88,8 @@ final class AppContainer {
             clock: clock,
             tickerFactory: tickerFactory,
             settings: settings,
-            notifications: notifications
+            notifications: notifications,
+            health: health
         )
     }
 
@@ -109,7 +114,8 @@ final class AppContainer {
             settings: settings,
             notifications: notifications,
             exportJSON: exportHistoryJSON,
-            importJSON: importHistoryJSON
+            importJSON: importHistoryJSON,
+            health: health
         )
     }
 
@@ -120,7 +126,8 @@ final class AppContainer {
             updateEndDate: UpdateSessionEndDateUseCase(sessionRepo: sessionRepo),
             deleteSession: DeleteSessionUseCase(sessionRepo: sessionRepo),
             stopFast: stopFast,
-            notifications: notifications
+            notifications: notifications,
+            health: health
         )
     }
 }

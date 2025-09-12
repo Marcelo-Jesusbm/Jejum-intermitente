@@ -20,6 +20,7 @@ final class SettingsViewModel {
 
     private let settings: AppSettings
     private let notifications: NotificationScheduling
+    private let health: HealthStoreManaging
 
     // Backup
     private let exportJSON: ExportHistoryJSONUseCase
@@ -29,12 +30,14 @@ final class SettingsViewModel {
         settings: AppSettings,
         notifications: NotificationScheduling,
         exportJSON: ExportHistoryJSONUseCase,
-        importJSON: ImportHistoryJSONUseCase
+        importJSON: ImportHistoryJSONUseCase,
+        health: HealthStoreManaging
     ) {
         self.settings = settings
         self.notifications = notifications
         self.exportJSON = exportJSON
         self.importJSON = importJSON
+        self.health = health
     }
 
     func onAppear() { emit() }
@@ -44,6 +47,7 @@ final class SettingsViewModel {
             .toggle(title: Strings.Settings.notifications, isOn: settings.notificationsEnabled, key: "notifications"),
             .toggle(title: Strings.Settings.clock24h, isOn: settings.use24hClock, key: "24h"),
             .option(title: Strings.Settings.theme, value: settings.themeMode.displayName, key: "theme"),
+            .toggle(title: Strings.Settings.health, isOn: settings.healthEnabled, key: "health"),
             .action(title: Strings.Settings.export_json, key: "export_json"),
             .action(title: Strings.Settings.import_json, key: "import_json")
         ]
@@ -73,11 +77,35 @@ final class SettingsViewModel {
                 onToast?(Strings.Settings.notifOff)
                 emit()
             }
+
         case "24h":
             settings.use24hClock = isOn
             onToast?(isOn ? Strings.Settings.clockOn : Strings.Settings.clockOff)
             emit()
-        default: break
+
+        case "health":
+            if isOn {
+                health.requestAuthorizationIfNeeded { [weak self] granted in
+                    guard let self else { return }
+                    DispatchQueue.main.async {
+                        if granted {
+                            self.settings.healthEnabled = true
+                            self.onToast?(Strings.Settings.healthOn)
+                        } else {
+                            self.settings.healthEnabled = false
+                            self.onToast?(Strings.Settings.healthDenied)
+                        }
+                        self.emit()
+                    }
+                }
+            } else {
+                settings.healthEnabled = false
+                onToast?(Strings.Settings.healthOff)
+                emit()
+            }
+
+        default:
+            break
         }
     }
 
@@ -122,7 +150,7 @@ private extension Strings.Settings {
     static var import_result: String { NSLocalizedString("settings.import.result", comment: "") }
     static var import_failed: String { NSLocalizedString("settings.import.failed", comment: "") }
 }
-private extension Strings {
+ extension Strings {
     static var settings_import_result: String { NSLocalizedString("settings.import.result", comment: "") }
     static var settings_import_failed: String { NSLocalizedString("settings.import.failed", comment: "") }
 }
